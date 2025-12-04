@@ -12,15 +12,12 @@ public:
 
     // move based on velocity
     virtual void setVelo(double velo_x, double velo_y){vel_x_ = velo_x; vel_y_ = velo_y;}
-    virtual void moveVelo(float deltaTime){x_ += deltaTime * vel_x_; 
-        y_ += deltaTime * vel_y_;}
+    virtual void moveVelo(float deltaTime){setPos(x_ + deltaTime * vel_x_, 
+        y_ + deltaTime * vel_y_);}
     virtual void setPos(double x, double y){x_ = x; y_ = y;}
     virtual void setColor(std::string color){color_ = color;}
     virtual double getX(){return x_;}
     virtual double getY(){return y_;}
-
-    virtual ~Shape() = 0;
+    virtual void draw(SDL_Renderer* renderer) const = 0;
 
 };
-
-Shape::~Shape(){}

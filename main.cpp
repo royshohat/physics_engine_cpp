@@ -29,7 +29,10 @@ int main(){
     //re.setVelo(25, 25); // pixel/s
 
     Ball ball(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 30);
-    ball.setVelo(30, 0);
+    ball.setVelo(50, 0);
+
+    Ball ball2(WINDOW_WIDTH/2+140, WINDOW_HEIGHT/2+40, 30);
+    ball2.setVelo(50, 0);
 
     //Line line(300, 800, 800, 300);
 
@@ -54,6 +57,9 @@ int main(){
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); 
         ball.draw(renderer);
 
+        // draw the ball2
+        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); 
+        ball2.draw(renderer);
         // draw a line
         //SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); 
         //line.draw(renderer);
@@ -73,12 +79,20 @@ int main(){
         auto elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(elapsed);
 
         ball.moveToVelo(elapsed_seconds.count()); // move based on delta time
-        ball.setVelo(ball.getVeloX(), ball.getVeloY()+1);
+        ball.setVelo(ball.getVeloX(), ball.getVeloY()+1); //gravity
 
         //ball.checkForLineCollision(line);
         ball.checkForWindowCollision(WINDOW_WIDTH, WINDOW_HEIGHT);
-        ball.checkForInsideCircleCollision(circle);
+        ball.checkForCircleCollision(circle);
+        ball.checkForCircleCollision(ball2);
 
+        ball2.moveToVelo(elapsed_seconds.count()); // move based on delta time
+        ball2.setVelo(ball2.getVeloX(), ball2.getVeloY()+1); //gravity
+
+        //ball.checkForLineCollision(line);
+        ball2.checkForWindowCollision(WINDOW_WIDTH, WINDOW_HEIGHT);
+        ball2.checkForCircleCollision(circle);
+        ball2.checkForCircleCollision(ball);
     }
 
     // cleanup

@@ -14,7 +14,7 @@ public:
     void setFilled(bool filled) {filled_ = filled;}
     void checkForLineCollision(Line line);
     void checkForLineCollision(double m, double b, bool skip);
-    void checkForInsideCircleCollision(Ball circle);
+    void checkForCircleCollision(Ball circle);
     void checkForWindowCollision(int windowHeight, int windowWidth);
 
 };

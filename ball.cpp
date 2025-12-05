@@ -76,11 +76,12 @@ void Ball::checkForWindowCollision(int windowHeight, int windowWidth){
 }
 
 
-void Ball::checkForInsideCircleCollision(Ball circle){
+void Ball::checkForCircleCollision(Ball circle){
     // calculate the distance between both centers
     double d = std::sqrt((circle.getX() - x_) * (circle.getX() - x_)
                         + (circle.getY() - y_) * (circle.getY() - y_));
-    if(d >= circle.getRadius() - radius_){
+    if((d >= circle.getRadius() - radius_ && d <= circle.getRadius() + radius_)
+        || d <= circle.getRadius() + radius_ && d >= circle.getRadius() - radius_ ){
          double m = (circle.getY() - y_) / (circle.getX() - x_);
          double b = y_ - m*x_;
          double firstPart = std::sqrt((1+m*m)*circle.getRadius()*circle.getRadius() - b*b);

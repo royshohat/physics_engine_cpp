@@ -28,10 +28,12 @@ int main(){
     //Rectangle re(10, 10, 30, 30);
     //re.setVelo(25, 25); // pixel/s
 
-    Ball ball(300, 30, 30);
-    ball.setVelo(800, 300);
+    Ball ball(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 30);
+    ball.setVelo(30, 0);
 
-    Line line(300, 800, 800, 300);
+    //Line line(300, 800, 800, 300);
+
+    Ball circle(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 250, false);
 
     bool running = true;
     SDL_Event event;
@@ -53,9 +55,12 @@ int main(){
         ball.draw(renderer);
 
         // draw a line
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); 
-        line.draw(renderer);
+        //SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); 
+        //line.draw(renderer);
 
+        // draw a circle
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); 
+        circle.draw(renderer);
         
 
 
@@ -68,9 +73,11 @@ int main(){
         auto elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(elapsed);
 
         ball.moveToVelo(elapsed_seconds.count()); // move based on delta time
+        ball.setVelo(ball.getVeloX(), ball.getVeloY()+1);
 
-        ball.checkForLineCollision(line);
+        //ball.checkForLineCollision(line);
         ball.checkForWindowCollision(WINDOW_WIDTH, WINDOW_HEIGHT);
+        ball.checkForInsideCircleCollision(circle);
 
     }
 

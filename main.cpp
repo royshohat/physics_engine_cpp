@@ -1,6 +1,8 @@
 #include <iostream>
 #include <chrono>
 #include <SDL2/SDL.h>
+#include <vector>
+#include <memory>
 
 #include "shape.h"
 #include "line.h"
@@ -28,15 +30,20 @@ int main(){
     //Rectangle re(10, 10, 30, 30);
     //re.setVelo(25, 25); // pixel/s
 
-    Ball ball(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 30);
-    ball.setVelo(50, 0);
 
-    Ball ball2(WINDOW_WIDTH/2+140, WINDOW_HEIGHT/2+40, 30);
-    ball2.setVelo(50, 0);
 
-    //Line line(300, 800, 800, 300);
+    std::vector<std::unique_ptr<Shape>> objects;
+    objects.push_back(std::make_unique<Ball>(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 250, false));
+    for(int i=0; i!=5; ++i){
+        for(int j=0; j!=5; j++){
+            objects.push_back(std::make_unique<Ball>(250+i*30, 250+j*30, 10));
+            objects[i*5 + j+1]->setVelo(25, 25);
+            
+        }
+    }
 
-    Ball circle(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 250, false);
+
+    
 
     bool running = true;
     SDL_Event event;
@@ -53,48 +60,39 @@ int main(){
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
         SDL_RenderClear(renderer);
 
-        // draw the ball
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); 
-        ball.draw(renderer);
 
-        // draw the ball2
-        SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); 
-        ball2.draw(renderer);
-        // draw a line
-        //SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); 
-        //line.draw(renderer);
-
-        // draw a circle
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255); 
-        circle.draw(renderer);
-        
+        objects[0]->draw(renderer);
+
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); 
+        for(int i=1; i!=26; ++i){
+            objects[i]->draw(renderer);
+        }
 
 
         SDL_RenderPresent(renderer);
 
 
 
+        for(int i=1; i!=26; ++i){
+            objects[i]->setVelo(objects[i]->getVeloX(), objects[i]->getVeloY()+1); // move based on delta time
+
+            for(int j=0; j!=26; ++j){
+                if(j==i) continue;
+                objects[i]->checkForCollision(static_cast<Ball*>(objects[j].get()));
+            }
+        }
+
 
         auto elapsed = Clock::now() - start_time;
         auto elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(elapsed);
 
-        ball.moveToVelo(elapsed_seconds.count()); // move based on delta time
-        ball.setVelo(ball.getVeloX(), ball.getVeloY()+1); //gravity
-
-        //ball.checkForLineCollision(line);
-        ball.checkForWindowCollision(WINDOW_WIDTH, WINDOW_HEIGHT);
-        ball.checkForCollision(circle);
-        ball.checkForCollision(ball2);
-
-        ball2.moveToVelo(elapsed_seconds.count()); // move based on delta time
-        ball2.setVelo(ball2.getVeloX(), ball2.getVeloY()+1); //gravity
-
-        //ball.checkForLineCollision(line);
-        ball2.checkForWindowCollision(WINDOW_WIDTH, WINDOW_HEIGHT);
-        ball2.checkForCollision(circle);
-        ball2.checkForCollision(ball);
+        for(int i=1; i!=26; ++i){
+            objects[i]->moveToVelo(elapsed_seconds.count()); // move based on delta time
+        }
     }
 
+    
     // cleanup
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);

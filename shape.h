@@ -13,6 +13,7 @@ protected:
 
 public:
     Shape(double x, double y) : x_{x}, y_{y}, color_{"red"} {}
+    virtual ~Shape() = default;
 
     // move based on velocity
     virtual void setVelo(double velo_x, double velo_y){vel_x_ = velo_x; vel_y_ = velo_y;}
@@ -29,6 +30,6 @@ public:
     virtual void checkForCollision(Line line) = 0;
     virtual void checkForCollision(double m, double b, bool skip) = 0;
     virtual void checkForCollision(Rectangle rect) = 0;
-    virtual void checkForCollision(Ball ball) = 0;
+    virtual void checkForCollision(Ball* ball) = 0;
 
 };

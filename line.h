@@ -17,5 +17,5 @@ public:
     void checkForCollision (Line line) override;
     void checkForCollision(double m, double b, bool skip) override;
     void checkForCollision(Rectangle rect) override; 
-    void checkForCollision(Ball circle) override;
+    void checkForCollision(Ball* circle) override;
 };

@@ -5,6 +5,7 @@
 #include "shape.h"
 #include "line.h"
 #include "ball.h"
+#include "rectangle.h"
 
 
 void Ball::draw(SDL_Renderer* renderer) const{
@@ -40,7 +41,7 @@ void Ball::draw(SDL_Renderer* renderer) const{
     }
 }
 
-void Ball::checkForLineCollision(double m, double b, bool skip){
+void Ball::checkForCollision(double m, double b, bool skip){
         // finding the distance between the center of the ball to the lne
         double d = std::abs(-m * x_ + y_ - b) / 
                             std::sqrt(m*m + 1);
@@ -59,11 +60,11 @@ void Ball::checkForLineCollision(double m, double b, bool skip){
         }
 }
 
-void Ball::checkForLineCollision(Line line){
+void Ball::checkForCollision(Line line){
         // calculate the distance between the ball and the line
         double m = (line.getY()-line.getY2()) / (line.getX() - line.getX2());
         double b = line.getY() - m*line.getX();
-        this->checkForLineCollision(m, b, false);
+        this->checkForCollision(m, b, false);
 }
 
 void Ball::checkForWindowCollision(int windowHeight, int windowWidth){
@@ -76,7 +77,7 @@ void Ball::checkForWindowCollision(int windowHeight, int windowWidth){
 }
 
 
-void Ball::checkForCircleCollision(Ball circle){
+void Ball::checkForCollision(Ball circle){
     // calculate the distance between both centers
     double d = std::sqrt((circle.getX() - x_) * (circle.getX() - x_)
                         + (circle.getY() - y_) * (circle.getY() - y_));
@@ -93,7 +94,11 @@ void Ball::checkForCircleCollision(Ball circle){
 
         double derivativeM = -1/m; 
         double derivativeB = y - derivativeM*x;
-        this->checkForLineCollision(derivativeM, derivativeB, true);
+        this->checkForCollision(derivativeM, derivativeB, true);
 
     }
+}
+void Ball::checkForCollision(Rectangle rect){
+    // TODO: complete this func
+    return;
 }

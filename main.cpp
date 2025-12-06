@@ -83,16 +83,16 @@ int main(){
 
         //ball.checkForLineCollision(line);
         ball.checkForWindowCollision(WINDOW_WIDTH, WINDOW_HEIGHT);
-        ball.checkForCircleCollision(circle);
-        ball.checkForCircleCollision(ball2);
+        ball.checkForCollision(circle);
+        ball.checkForCollision(ball2);
 
         ball2.moveToVelo(elapsed_seconds.count()); // move based on delta time
         ball2.setVelo(ball2.getVeloX(), ball2.getVeloY()+1); //gravity
 
         //ball.checkForLineCollision(line);
         ball2.checkForWindowCollision(WINDOW_WIDTH, WINDOW_HEIGHT);
-        ball2.checkForCircleCollision(circle);
-        ball2.checkForCircleCollision(ball);
+        ball2.checkForCollision(circle);
+        ball2.checkForCollision(ball);
     }
 
     // cleanup

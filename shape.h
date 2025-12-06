@@ -1,4 +1,8 @@
 //abstract class
+class Line;
+class Rectangle;
+class Ball;
+
 class Shape {
 protected:
     double x_;
@@ -20,6 +24,11 @@ public:
     virtual double const getY(){return y_;}
     virtual double const getVeloX(){return vel_x_;}
     virtual double const getVeloY(){return vel_y_;}
+
     virtual void draw(SDL_Renderer* renderer) const = 0;
+    virtual void checkForCollision(Line line) = 0;
+    virtual void checkForCollision(double m, double b, bool skip) = 0;
+    virtual void checkForCollision(Rectangle rect) = 0;
+    virtual void checkForCollision(Ball ball) = 0;
 
 };

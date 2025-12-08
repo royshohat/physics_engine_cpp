@@ -10,6 +10,31 @@
             "cStandard": "c17",
             "cppStandard": "c++14",
             "intelliSenseMode": "macos-clang-arm64"
+        },
+        {
+            "name": "Win32",
+            "includePath": [
+                "c:/Users/roy12/Documents/dev/cpp/physics_engine_cpp/**",
+                "C:/dev/VCPKG/vcpkg/installed/x64-windows/include"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.26100.0",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "compilerArgs": [
+                "-I/usr/include/SDL2 -D_REENTRANT -lSDL2"
+            ],
+            "compilerPathInCppPropertiesJson": "cl.exe",
+            "intelliSenseMode": "gcc-x64",
+            "mergeConfigurations": false,
+            "recursiveIncludes": {},
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true
+            }
         }
     ],
     "version": 4

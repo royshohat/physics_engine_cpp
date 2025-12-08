@@ -5,31 +5,27 @@ class Ball;
 
 class Shape {
 protected:
-    double x_;
-    double y_;
-    double vel_x_;
-    double vel_y_;
-    std::string color_;
+    Vector2 pos_;
+    Vector2 velocity_;
+    std::string color_; // mess with the color later
 
 public:
-    Shape(double x, double y) : x_{x}, y_{y}, color_{"red"} {}
+    Shape(Vector2 pos) : pos_{pos} , velocity_{0, 0}, color_{"red"} {}
+    Shape(Vector2 pos, Vector2 velocity) : pos_{pos} , velocity_{velocity}, color_{"red"} {}
     virtual ~Shape() = default;
 
     // move based on velocity
-    virtual void setVelo(double velo_x, double velo_y){vel_x_ = velo_x; vel_y_ = velo_y;}
-    virtual void moveToVelo(float deltaTime){setPos(x_ + deltaTime * vel_x_, 
-        y_ + deltaTime * vel_y_);}
-    virtual void setPos(double x, double y){x_ = x; y_ = y;}
+    virtual void setVelo(Vector2& velocity){velocity_ = velocity;}
+    virtual void setPos(Vector2& pos){pos_ = pos;}
+    virtual void moveToVelo(float deltaTime){pos_ += velocity_*deltaTime;}
     virtual void setColor(std::string color){color_ = color;}
-    virtual double const getX(){return x_;}
-    virtual double const getY(){return y_;}
-    virtual double const getVeloX(){return vel_x_;}
-    virtual double const getVeloY(){return vel_y_;}
+    virtual Vector2 const getPos(){return pos_;}
+    virtual Vector2 const getVelo(){return velocity_;}
 
     virtual void draw(SDL_Renderer* renderer) const = 0;
-    virtual void checkForCollision(Line line) = 0;
-    virtual void checkForCollision(double m, double b, bool skip) = 0;
-    virtual void checkForCollision(Rectangle rect) = 0;
-    virtual void checkForCollision(Ball* ball) = 0;
+    //virtual void checkForCollision(Line line) = 0;
+    //virtual void checkForCollision(double m, double b, bool skip) = 0;
+    //virtual void checkForCollision(Rectangle rect) = 0;
+    virtual void checkForCollision(Ball& ball) = 0;
 
 };

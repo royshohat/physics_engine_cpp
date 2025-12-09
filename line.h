@@ -3,8 +3,7 @@ class Rectangle;
 class Ball;
 
 class Line : public Shape {
-    double x2_;
-    double y2_;
+    Vector2 pos2_; 
 
 public:
     Line(double x1, double y1, double x2, double y2) : Shape(x1, y1), x2_{x2}, y2_{y2} {}

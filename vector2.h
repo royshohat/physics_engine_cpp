@@ -13,6 +13,7 @@ struct Vector2 {
     Vector2 operator*(double scalar) const { return {x * scalar, y * scalar}; }
 
     void operator+=(const Vector2& other) { x += other.x; y += other.y; }
+    void operator-=(const Vector2& other) { x -= other.x; y -= other.y; }
 
 
 };

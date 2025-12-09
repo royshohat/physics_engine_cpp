@@ -15,8 +15,8 @@ public:
     virtual ~Shape() = default;
 
     // move based on velocity
-    virtual void setVelo(Vector2& velocity){velocity_ = velocity;}
-    virtual void setPos(Vector2& pos){pos_ = pos;}
+    virtual void setVelo(const Vector2& velocity){velocity_ = velocity;}
+    virtual void setPos(const Vector2& pos){pos_ = pos;}
     virtual void moveToVelo(float deltaTime){pos_ += velocity_*deltaTime;}
     virtual void setColor(std::string color){color_ = color;}
     virtual Vector2 const getPos(){return pos_;}

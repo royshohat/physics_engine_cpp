@@ -13,7 +13,7 @@
 const int WINDOW_WIDTH = 800;
 const int WINDOW_HEIGHT = 800;
 
-#define BALLS_AMOUNT 36 
+#define BALLS_AMOUNT 36
 
 using Clock = std::chrono::steady_clock;
 
@@ -51,12 +51,14 @@ int main(){
     for(int i=0; i!=(int)std::sqrt(BALLS_AMOUNT); ++i){
         for(int j=0; j!=(int)std::sqrt(BALLS_AMOUNT); ++j){
            objs.push_back(std::make_unique<Ball>(
-            Vector2{static_cast<float>(i*30+30), static_cast<float>(j*30+30)}, 
-            Vector2{480, 690}, 
-            10
+            Vector2{static_cast<float>(i*190+100), static_cast<float>(j*190+100)}, 
+            //Vector2{50, 50}, 
+            40
 )); 
         }
     }
+    objs[0]->setVelo(Vector2{1040, 350});
+
     
 
     bool running = true;
@@ -95,7 +97,7 @@ int main(){
             //}
         //}
 
-        for(auto i=0; i!=BALLS_AMOUNT-1; ++i){
+        for(auto i=0; i!=BALLS_AMOUNT; ++i){
             objs[i]->checkForWindowCollision(WINDOW_WIDTH, WINDOW_HEIGHT);
             for(auto j=i+1; j!=BALLS_AMOUNT; ++j){
                 objs[i]->checkForCollision(*objs[j]);

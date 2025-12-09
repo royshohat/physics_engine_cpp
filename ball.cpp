@@ -92,10 +92,8 @@ void Ball::draw(SDL_Renderer* renderer) const{
 //}
 
 //void Ball::checkForCollision(Line line){
-        //// calculate the dstance between the ball and the line
-        //double m = (line.getY()-line.getY2()) / (line.getX() - line.getX2());
-        //double b = line.getY() - m*line.getX();
-        //this->checkForCollision(m, b, false);
+    //// calculate the dstance between the ball and the line
+    
 //}
 
 void Ball::checkForWindowCollision(int windowHeight, int windowWidth){
@@ -133,6 +131,19 @@ void Ball::checkForCollision(Ball& other_ball){
         Vector2 normal = pos_ - other_ball.getPos();
 
         Vector2 n_hat = normalize(normal);
+
+        // pos correction
+        auto radii_dif = radius_ + other_ball.getRadius() - d;
+        
+        Vector2 correc = n_hat * (radii_dif/2);
+        pos_ += correc;
+
+        Vector2 otherCorrec = other_ball.getPos() - correc;
+        other_ball.setPos(other_ball.getPos() - correc);
+
+
+
+        // resolution
 
         double v1n_scalar = dot(velocity_, n_hat);
         double v2n_scalar = dot(other_ball.getVelo(), n_hat); 

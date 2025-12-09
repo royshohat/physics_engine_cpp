@@ -20,10 +20,12 @@ public:
     void draw(SDL_Renderer* renderer) const override;
     double const getRadius(){return radius_;}
     void setFilled(bool filled) {filled_ = filled;}
-    //void checkForCollision (Line line) override;
+    void checkForWindowCollision(int windowHeight, int windowWidth) override;
+
+    void checkForCollisionLine(Line& line) override;
     //void checkForCollision(double m, double b, bool skip) override;
     //void checkForCollision(Rectangle rect) override;
-    void checkForCollision(Ball& circle) override;
-    void checkForWindowCollision(int windowHeight, int windowWidth);
+    void checkForCollisionBall(Ball& circle) override;
+    void checkForCollision(Shape& shape) override {shape.checkForCollisionBall(*this); }
 
 };

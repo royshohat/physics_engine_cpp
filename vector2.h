@@ -13,6 +13,10 @@ struct Vector2 {
     // Scalar multiplication 
     Vector2 operator*(double scalar) const { return {x * scalar, y * scalar}; }
 
+    // vector mutiplication
+    Vector2 operator*(const Vector2& other) { return {x * other.x, y * other.y}; }
+    
+
     void operator+=(const Vector2& other) { x += other.x; y += other.y; }
     void operator-=(const Vector2& other) { x -= other.x; y -= other.y; }
 

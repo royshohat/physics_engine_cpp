@@ -26,9 +26,12 @@ public:
     virtual bool const getMoveability(){return moveable_;}
 
     virtual void draw(SDL_Renderer* renderer) const = 0;
-    //virtual void checkForCollision(Line line) = 0;
+
+    virtual void checkForWindowCollision(int, int){};
     //virtual void checkForCollision(double m, double b, bool skip) = 0;
     //virtual void checkForCollision(Rectangle rect) = 0;
-    virtual void checkForCollision(Ball& ball) = 0;
+    virtual void checkForCollisionLine(Line& line) = 0;
+    virtual void checkForCollisionBall(Ball& ball) = 0;
+    virtual void checkForCollision(Shape& shape) = 0;
 
 };

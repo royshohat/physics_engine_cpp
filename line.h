@@ -6,15 +6,16 @@ class Line : public Shape {
     Vector2 pos2_; 
 
 public:
-    Line(double x1, double y1, double x2, double y2) : Shape(x1, y1), x2_{x2}, y2_{y2} {}
+    Line(Vector2 pos, Vector2 pos2) : Shape(pos), pos2_{pos2} {}
 
     void draw (SDL_Renderer* renderer) const override {
-        SDL_RenderDrawLine(renderer, x_, y_, x2_, y2_);}
-    double getX2(){return x2_;}
-    double getY2(){return y2_;}
+        SDL_RenderDrawLine(renderer, pos_.x, pos_.y, pos2_.x, pos2_.y);}
+
+    Vector2 getPos2(){return pos2_;}
+
     
-    void checkForCollision (Line line) override;
-    void checkForCollision(double m, double b, bool skip) override;
-    void checkForCollision(Rectangle rect) override; 
-    void checkForCollision(Ball* circle) override;
+    void checkForCollisionLine(Line& line) override {};
+    //void checkForCollision(Rectangle rect) override; 
+    void checkForCollisionBall(Ball& circle) override {};
+    void checkForCollision(Shape& shape) override {shape.checkForCollisionLine(*this); }
 };

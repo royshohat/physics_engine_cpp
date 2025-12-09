@@ -5,9 +5,10 @@
 
 #include "vector2.h"
 #include "shape.h"
-//#include "line.h"
+#include "line.h"
 #include "ball.h"
 //#include "rectangle.h"
+
 
 // Standalone Dot Product
 double dot(const Vector2& a, const Vector2& b) {
@@ -53,48 +54,24 @@ void Ball::draw(SDL_Renderer* renderer) const{
     }
 }
 
-//void Ball::checkForCollision(double m, double b, bool skip){
-        //// fnding the distance between the center of the ball to the lne
-        //double d = std::abs(-m * pos_.x + pos_.y - b) / 
-                            //std::sqrt(m*m + 1);
 
-        ////std::cout << '(' << ", " << b << ')' << std::endl;
+void Ball::checkForCollisionLine(Line& line){
+    //calculate the dstance between the ball and the line
+    Vector2 centToPos = pos_ - line.getPos();
+    Vector2 Pos2ToPos = line.getPos2() - line.getPos();
 
-        //if (d <= radius_ || skip) {
-
-
-            //// finding the normal
-            //double Nx = m/std::sqrt(m*m + 1);
-            //double Ny = -1/std::sqrt(m*m + 1);
-
-            //// finding the penetration amount 
-
-            ////double pen =  - d;
-
-
-            ////x_ += Nx * pen;
-            ////y_ += Ny * pen;
-            ////std::cout << "x_: " << x_ << std::endl;
-            ////std::cout << "y_: " << y_ << std::endl;
-            ////std::cout << "pen: " << pen << std::endl;
-            ////std::cout << "Nx: " << Nx << std::endl;
-            ////std::cout << "Ny: " << Ny << std::endl;
-
-
-
-            //// calc the dot product
-            //double dotProduct = vel_x_ * Nx
-                              //+ vel_y_ * Ny;
-
-            //vel_x_ = vel_x_ - 2*dotProduct*Nx;
-            //vel_y_ = vel_y_ - 2*dotProduct*Ny;
-        //}
-//}
-
-//void Ball::checkForCollision(Line line){
-    //// calculate the dstance between the ball and the line
+    double d = std::abs(centToPos.x * Pos2ToPos.y - centToPos.y * Pos2ToPos.x)/std::sqrt(Pos2ToPos.magnitudeSq());
     
-//}
+    if (d>radius_) return;
+
+    Vector2 normal{-Pos2ToPos.y, Pos2ToPos.x};
+    //Vector2 normal(Pos2ToPos.y, -Pos2ToPos.x);
+
+    normal = normalize(normal);
+    velocity_ = velocity_ - normal*normal*velocity_*2;
+
+    
+}
 
 void Ball::checkForWindowCollision(int windowWidth, int windowHeight){
     if(pos_.x > windowWidth - radius_){
@@ -117,7 +94,7 @@ void Ball::checkForWindowCollision(int windowWidth, int windowHeight){
 }
 
 
-void Ball::checkForCollision(Ball& other_ball){
+void Ball::checkForCollisionBall(Ball& other_ball){
     // calculate the dstance between both centers
     double d = std::sqrt((other_ball.getPos().x - pos_.x) * (other_ball.getPos().x - pos_.x)
                         + (other_ball.getPos().y - pos_.y) * (other_ball.getPos().y - pos_.y));

@@ -6,20 +6,20 @@
 
 #include "vector2.h"
 #include "shape.h"
-//#include "line.h"
+#include "line.h"
 #include "ball.h"
 //#include "rectangle.h"
 
 const int WINDOW_WIDTH = 1800;
 const int WINDOW_HEIGHT = 800;
 
-#define BALLS_AMOUNT 1600
+#define BALLS_AMOUNT 400
 
 using Clock = std::chrono::steady_clock;
 
-void drawAllObjects(const std::vector<std::unique_ptr<Ball>>& objects, SDL_Renderer* renderer);
-void moveObjsToVelocity(const std::vector<std::unique_ptr<Ball>>& objects, float elapsed_time);
-void checkForEveryCollision(std::vector<std::unique_ptr<Ball>>& objects);
+void drawAllObjects(const std::vector<std::unique_ptr<Shape>>& objects, SDL_Renderer* renderer);
+void moveObjsToVelocity(const std::vector<std::unique_ptr<Shape>>& objects, float elapsed_time);
+void checkForEveryCollision(std::vector<std::unique_ptr<Shape>>& objects);
 
 int main(){
 
@@ -35,7 +35,7 @@ int main(){
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); 
 
 
-    std::vector<std::unique_ptr<Ball>> objs;
+    std::vector<std::unique_ptr<Shape>> objs;
     for(int i=0; i!=(int)std::sqrt(BALLS_AMOUNT); ++i){
         for(int j=0; j!=(int)std::sqrt(BALLS_AMOUNT); ++j){
            objs.push_back(std::make_unique<Ball>(
@@ -47,6 +47,7 @@ int main(){
     }
     //objs[0]->setVelo(Vector2{1040, 350});
     //objs.push_back(std::make_unique<Ball>(Vector2{1500, 500}, 200));
+
 
     
 
@@ -96,12 +97,12 @@ int main(){
 
 }
 
-void drawAllObjects(const std::vector<std::unique_ptr<Ball>>& objects, SDL_Renderer* renderer){
+void drawAllObjects(const std::vector<std::unique_ptr<Shape>>& objects, SDL_Renderer* renderer){
     for (const auto& obj : objects){
         obj->draw(renderer);
     }
 }
-void moveObjsToVelocity(const std::vector<std::unique_ptr<Ball>>& objects, float elapsed_time){
+void moveObjsToVelocity(const std::vector<std::unique_ptr<Shape>>& objects, float elapsed_time){
     for (const auto& obj : objects){
         if(!obj->getMoveability()) return;
         obj->setVelo(Vector2{obj->getVelo().x, obj->getVelo().y+100*elapsed_time});
@@ -109,7 +110,7 @@ void moveObjsToVelocity(const std::vector<std::unique_ptr<Ball>>& objects, float
     }
 }
 
-void checkForEveryCollision(std::vector<std::unique_ptr<Ball>>& objects){
+void checkForEveryCollision(std::vector<std::unique_ptr<Shape>>& objects){
     for(auto i=0; i!=objects.size(); ++i){
         if(!objects[i]->getMoveability()) continue;
         objects[i]->checkForWindowCollision(WINDOW_WIDTH, WINDOW_HEIGHT);

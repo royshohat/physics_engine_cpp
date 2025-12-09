@@ -10,14 +10,16 @@
 #include "ball.h"
 //#include "rectangle.h"
 
-const int WINDOW_WIDTH = 800;
+const int WINDOW_WIDTH = 1800;
 const int WINDOW_HEIGHT = 800;
 
-#define BALLS_AMOUNT 36
+#define BALLS_AMOUNT 1600
 
 using Clock = std::chrono::steady_clock;
 
-
+void drawAllObjects(const std::vector<std::unique_ptr<Ball>>& objects, SDL_Renderer* renderer);
+void moveObjsToVelocity(const std::vector<std::unique_ptr<Ball>>& objects, float elapsed_time);
+void checkForEveryCollision(std::vector<std::unique_ptr<Ball>>& objects);
 
 int main(){
 
@@ -32,32 +34,19 @@ int main(){
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); 
 
-    //Rectangle re(10, 10, 30, 30);
-    //re.setVelo(25, 25); // pixel/s
-
-
-
-    //std::vector<std::unique_ptr<Shape>> objects;
-    //objects.push_back(std::make_unique<Ball>(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, 250, false));
-    //for(int i=0; i!=2; ++i){
-        //for(int j=0; j!=2; j++){
-            //objects.push_back(std::make_unique<Ball>(250+i*30, 250+j*30, 10));
-            //objects[i*2 + j+1]->setVelo(25, 25);
-            
-        //}
-    //}
 
     std::vector<std::unique_ptr<Ball>> objs;
     for(int i=0; i!=(int)std::sqrt(BALLS_AMOUNT); ++i){
         for(int j=0; j!=(int)std::sqrt(BALLS_AMOUNT); ++j){
            objs.push_back(std::make_unique<Ball>(
-            Vector2{static_cast<float>(i*190+100), static_cast<float>(j*190+100)}, 
-            //Vector2{50, 50}, 
-            40
+            Vector2{static_cast<float>(i*20+100+j*2), static_cast<float>(j*20+100)}, 
+            Vector2{0, 0}, 
+            7
 )); 
         }
     }
-    objs[0]->setVelo(Vector2{1040, 350});
+    //objs[0]->setVelo(Vector2{1040, 350});
+    //objs.push_back(std::make_unique<Ball>(Vector2{1500, 500}, 200));
 
     
 
@@ -80,46 +69,21 @@ int main(){
 
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); 
 
-        for(auto i=0; i!=BALLS_AMOUNT; ++i){
-            objs[i]->draw(renderer);
-        }
+        drawAllObjects(objs, renderer);
 
         SDL_RenderPresent(renderer);
 
 
 
-        //for(int i=1; i!=5; ++i){
-            //objects[i]->setVelo(objects[i]->getVeloX(), objects[i]->getVeloY()+1); // move based on delta time
-
-            //for(int j=0; j!=5; ++j){
-                //if(j==i) continue;
-                //objects[i]->checkForCollision(static_cast<Ball*>(objects[j].get()));
-            //}
-        //}
-
-        for(auto i=0; i!=BALLS_AMOUNT; ++i){
-            objs[i]->checkForWindowCollision(WINDOW_WIDTH, WINDOW_HEIGHT);
-            for(auto j=i+1; j!=BALLS_AMOUNT; ++j){
-                objs[i]->checkForCollision(*objs[j]);
-            }
-        }
-
+        checkForEveryCollision(objs);
 
 
         auto elapsed = Clock::now() - start_time;
         auto elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(elapsed);
 
 
-
-        for(auto i=0; i!=BALLS_AMOUNT; ++i){
-            objs[i]->moveToVelo(elapsed_seconds.count());
-        }
+        moveObjsToVelocity(objs, elapsed_seconds.count());
         
-        //ball1.moveToVelo(elapsed_seconds.count());
-        //ball2.moveToVelo(elapsed_seconds.count());
-        //for(int i=1; i!=5; ++i){
-            //objects[i]->moveToVelo(elapsed_seconds.count()); // move based on delta time
-        //}
     }
 
     
@@ -132,3 +96,25 @@ int main(){
 
 }
 
+void drawAllObjects(const std::vector<std::unique_ptr<Ball>>& objects, SDL_Renderer* renderer){
+    for (const auto& obj : objects){
+        obj->draw(renderer);
+    }
+}
+void moveObjsToVelocity(const std::vector<std::unique_ptr<Ball>>& objects, float elapsed_time){
+    for (const auto& obj : objects){
+        if(!obj->getMoveability()) return;
+        obj->setVelo(Vector2{obj->getVelo().x, obj->getVelo().y+100*elapsed_time});
+        obj->moveToVelo(elapsed_time);
+    }
+}
+
+void checkForEveryCollision(std::vector<std::unique_ptr<Ball>>& objects){
+    for(auto i=0; i!=objects.size(); ++i){
+        if(!objects[i]->getMoveability()) continue;
+        objects[i]->checkForWindowCollision(WINDOW_WIDTH, WINDOW_HEIGHT);
+        for(auto j=i+1; j!=objects.size(); ++j){
+            objects[i]->checkForCollision(*objects[j]);
+        }
+    }
+}

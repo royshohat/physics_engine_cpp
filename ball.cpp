@@ -96,23 +96,23 @@ void Ball::draw(SDL_Renderer* renderer) const{
     
 //}
 
-void Ball::checkForWindowCollision(int windowHeight, int windowWidth){
+void Ball::checkForWindowCollision(int windowWidth, int windowHeight){
     if(pos_.x > windowWidth - radius_){
-        if (velocity_.x > 0) velocity_.x *= -1;        
+        if (velocity_.x > 0) velocity_.x *= -0.4;        
     }
     if(pos_.x < radius_){
-        if (velocity_.x < 0) velocity_.x *= -1;        
+        if (velocity_.x < 0) velocity_.x *= -0.4;        
     }
     if(pos_.y > windowHeight - radius_){
-        if (velocity_.y < 0) velocity_.y *= -1;        
+        if (velocity_.y > 0) velocity_.y *= -0.4;        
     }
     if(pos_.y < radius_){
-        if (velocity_.y > 0) velocity_.y *= -1;        
+        if (velocity_.y < 0) velocity_.y *= -0.4;        
     }
 
 
-    if(pos_.y>windowHeight - radius_ || pos_.y < radius_)
-        velocity_.y *= -1;        
+    //if(pos_.y>windowHeight - radius_ || pos_.y < radius_)
+        //velocity_.y *= -1;        
     
 }
 
@@ -134,13 +134,17 @@ void Ball::checkForCollision(Ball& other_ball){
 
         // pos correction
         auto radii_dif = radius_ + other_ball.getRadius() - d;
+       
         
         Vector2 correc = n_hat * (radii_dif/2);
-        pos_ += correc;
-
+        if(!other_ball.getMoveability()){
+            pos_ += correc*2;
+            return;
+        }
+        pos_ += correc; 
         Vector2 otherCorrec = other_ball.getPos() - correc;
+        //if(other_ball.getMoveability()) other_ball.setPos(other_ball.getPos() - correc);
         other_ball.setPos(other_ball.getPos() - correc);
-
 
 
         // resolution
@@ -155,6 +159,7 @@ void Ball::checkForCollision(Ball& other_ball){
         Vector2 v2t = other_ball.getVelo() - v2n;
 
         velocity_ = v2n + v1t; 
+        if(!other_ball.getMoveability()) return;
         auto other_velocity = v1n + v2t;
 
         other_ball.setVelo(other_velocity);

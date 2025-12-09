@@ -11,7 +11,7 @@ public:
     : Shape(pos, {0, 0}),  radius_{radius}, filled_ {filled} {}
 
     Ball(Vector2 pos, double radius)
-    : Shape(pos, {0, 0}),  radius_{radius}, filled_ {true} {}
+    : Shape(pos),  radius_{radius}, filled_ {true} {}
 
     Ball(Vector2 pos, Vector2 velocity, double radius)
     : Shape(pos, velocity),  radius_{radius}, filled_ {true} {}

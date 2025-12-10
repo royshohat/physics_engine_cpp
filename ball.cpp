@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <cmath>
+#include <memory>
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -88,22 +89,19 @@ void Ball::checkForCollisionLine(Line& line){
 }
 
 void Ball::checkForWindowCollision(int windowWidth, int windowHeight){
-    if(pos_.x > windowWidth - radius_){
-        if (velocity_.x > 0) velocity_.x *= -0.4;        
-    }
-    if(pos_.x < radius_){
-        if (velocity_.x < 0) velocity_.x *= -0.4;        
-    }
-    if(pos_.y > windowHeight - radius_){
-        if (velocity_.y > 0) velocity_.y *= -0.4;        
-    }
-    if(pos_.y < radius_){
-        if (velocity_.y < 0) velocity_.y *= -0.4;        
-    }
 
+    Line line(Vector2{0, 0}, Vector2{static_cast<double>(windowWidth), 0});
+    checkForCollisionLine(line);
 
-    //if(pos_.y>windowHeight - radius_ || pos_.y < radius_)
-        //velocity_.y *= -1;        
+    line.setPos2(Vector2{0, static_cast<double>(windowHeight)});
+    checkForCollisionLine(line);
+
+    line.setPos(Vector2{static_cast<double>(windowWidth), static_cast<double>(windowHeight)});
+    checkForCollisionLine(line);
+
+    line.setPos2(Vector2{static_cast<double>(windowWidth), 0});
+    checkForCollisionLine(line);
+
     
 }
 

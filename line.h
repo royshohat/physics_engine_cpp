@@ -12,6 +12,7 @@ public:
         SDL_RenderDrawLine(renderer, pos_.x, pos_.y, pos2_.x, pos2_.y);}
 
     Vector2 getPos2(){return pos2_;}
+    void setPos2(Vector2 pos2){pos2_ = pos2;}
 
     
     void checkForCollisionLine(Line& line) override {};

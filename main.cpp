@@ -13,7 +13,7 @@
 const int WINDOW_WIDTH = 1000;
 const int WINDOW_HEIGHT = 800;
 
-#define BALLS_AMOUNT 400
+#define BALLS_AMOUNT 16
 
 using Clock = std::chrono::steady_clock;
 
@@ -36,16 +36,16 @@ int main(){
 
 
     std::vector<std::unique_ptr<Shape>> objs;
-    //for(int i=0; i!=(int)std::sqrt(BALLS_AMOUNT); ++i){
-        //for(int j=0; j!=(int)std::sqrt(BALLS_AMOUNT); ++j){
-           //objs.push_back(std::make_unique<Ball>(
-            //Vector2{static_cast<float>(i*20+100+j*2), static_cast<float>(j*20+100)}, 
-            //Vector2{0, 0}, 
-            //7)); 
-        //}
-    //}
-    //objs[0]->setVelo(Vector2{1040, 350});
-    objs.push_back(std::make_unique<Ball>(Vector2{300, 300}, Vector2{100, 400}, 60));
+    for(int i=0; i!=(int)std::sqrt(BALLS_AMOUNT); ++i){
+        for(int j=0; j!=(int)std::sqrt(BALLS_AMOUNT); ++j){
+           objs.push_back(std::make_unique<Ball>(
+            Vector2{static_cast<float>(i*20+100+j*2), static_cast<float>(j*20+100)}, 
+            Vector2{0, 0}, 
+            25)); 
+        }
+    }
+    objs[0]->setVelo(Vector2{1040, 350});
+    //objs.push_back(std::make_unique<Ball>(Vector2{300, 300}, Vector2{100, 400}, 60));
     objs.push_back(std::make_unique<Line>(Vector2{500, WINDOW_HEIGHT}, Vector2{WINDOW_WIDTH, 400}));
 
 

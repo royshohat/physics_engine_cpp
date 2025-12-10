@@ -20,7 +20,7 @@ public:
     virtual void setPos(const Vector2& pos){pos_ = pos;}
     virtual void moveToVelo(float deltaTime){pos_ += velocity_*deltaTime;}
     virtual void setColor(std::string color){color_ = color;}
-    virtual void setColor(bool moveable){moveable_ = moveable_;}
+    virtual void setColor(bool moveable){moveable_ = moveable;}
     virtual Vector2 const getPos(){return pos_;}
     virtual Vector2 const getVelo(){return velocity_;}
     virtual bool const getMoveability(){return moveable_;}

@@ -34,7 +34,8 @@
             "recursiveIncludes": {},
             "browse": {
                 "limitSymbolsToIncludedHeaders": true
-            }
+            },
+            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe"
         }
     ],
     "version": 4

@@ -8,12 +8,12 @@
 #include "shape.h"
 #include "line.h"
 #include "ball.h"
-//#include "rectangle.h"
+#include "rope.h"
 
 const int WINDOW_WIDTH = 1000;
 const int WINDOW_HEIGHT = 800;
 
-#define BALLS_AMOUNT 16
+#define BALLS_AMOUNT 64
 
 using Clock = std::chrono::steady_clock;
 
@@ -35,19 +35,21 @@ int main(){
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); 
 
 
+
     std::vector<std::unique_ptr<Shape>> objs;
     for(int i=0; i!=(int)std::sqrt(BALLS_AMOUNT); ++i){
         for(int j=0; j!=(int)std::sqrt(BALLS_AMOUNT); ++j){
            objs.push_back(std::make_unique<Ball>(
-            Vector2{static_cast<float>(i*20+100+j*2), static_cast<float>(j*20+100)}, 
+            Vector2{static_cast<float>(i*30+100+j*2), static_cast<float>(j*30+100)}, 
             Vector2{0, 0}, 
-            25)); 
+            20)); 
         }
     }
-    objs[0]->setVelo(Vector2{1040, 350});
     //objs.push_back(std::make_unique<Ball>(Vector2{300, 300}, Vector2{100, 400}, 60));
-    objs.push_back(std::make_unique<Line>(Vector2{500, WINDOW_HEIGHT}, Vector2{WINDOW_WIDTH, 400}));
+    objs.push_back(std::make_unique<Line>(Vector2{WINDOW_WIDTH/2, WINDOW_HEIGHT}, Vector2{WINDOW_WIDTH, 400}));
+    objs.push_back(std::make_unique<Line>(Vector2{WINDOW_WIDTH/2, WINDOW_HEIGHT}, Vector2{0, 400}));
 
+    Rope rope(Vector2{500, 50}, 20, 20.0f);
 
     
 
@@ -71,6 +73,7 @@ int main(){
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); 
 
         drawAllObjects(objs, renderer);
+        rope.draw(renderer);
 
         SDL_RenderPresent(renderer);
 
@@ -82,7 +85,7 @@ int main(){
         auto elapsed = Clock::now() - start_time;
         auto elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(elapsed);
 
-
+        rope.update(elapsed_seconds.count());
         moveObjsToVelocity(objs, elapsed_seconds.count());
         
     }

@@ -9,7 +9,6 @@
 #include "shape.h"
 #include "line.h"
 #include "ball.h"
-//#include "rectangle.h"
 
 
 // Standalone Dot Product
@@ -84,7 +83,7 @@ void Ball::checkForCollisionLine(Line& line){
     double dot_product = dot(velocity_, normal);
 
 
-    velocity_ = velocity_ - normal * (2 * dot_product);
+    velocity_ = velocity_ - normal * (2 * dot_product) * .7;
     
 }
 
@@ -111,14 +110,10 @@ void Ball::checkForCollisionBall(Ball& other_ball){
 
     Vector2 normal = pos_ - other_ball.getPos();
     
-    //double d = std::sqrt((other_ball.getPos().x - pos_.x) * (other_ball.getPos().x - pos_.x)
-                        //+ (other_ball.getPos().y - pos_.y) * (other_ball.getPos().y - pos_.y));
 
     double d = std::sqrt(normal.magnitudeSq());
 
 
-    //if((d >= other_ball.getRadius() - radius_ && d <= other_ball.getRadius() + radius_)
-        //|| d <= other_ball.getRadius() + radius_ && d >= other_ball.getRadius() - radius_ ){
 
     if(d >= other_ball.getRadius() - radius_ && d <= other_ball.getRadius() + radius_){
         
@@ -150,14 +145,11 @@ void Ball::checkForCollisionBall(Ball& other_ball){
         Vector2 v1t = velocity_ - v1n;
         Vector2 v2t = other_ball.getVelo() - v2n;
 
-        velocity_ = v2n + v1t; 
+        velocity_ = (v2n + v1t) * 0.98; 
         if(!other_ball.getMoveability()) return;
         auto other_velocity = v1n + v2t;
 
-        other_ball.setVelo(other_velocity);
+        other_ball.setVelo(other_velocity * 0.98);
     }
 }
-//void Ball::checkForCollision(Rectangle rect){
-    //// TODO: complete this func
-    //return;
-//}
+

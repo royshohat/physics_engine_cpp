@@ -1,8 +1,8 @@
 class Shape;
-class Rectangle;
 class Ball;
 
 class Line : public Shape {
+protected:
     Vector2 pos2_; 
 
 public:
@@ -16,7 +16,6 @@ public:
 
     
     void checkForCollisionLine(Line& line) override {};
-    //void checkForCollision(Rectangle rect) override; 
     void checkForCollisionBall(Ball& circle) override {};
     void checkForCollision(Shape& shape) override {shape.checkForCollisionLine(*this); }
 };

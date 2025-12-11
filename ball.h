@@ -1,5 +1,4 @@
 class Line;
-class Rectangle;
 class Shape;
 
 class Ball : public Shape {
@@ -23,8 +22,6 @@ public:
     void checkForWindowCollision(int windowHeight, int windowWidth) override;
 
     void checkForCollisionLine(Line& line) override;
-    //void checkForCollision(double m, double b, bool skip) override;
-    //void checkForCollision(Rectangle rect) override;
     void checkForCollisionBall(Ball& circle) override;
     void checkForCollision(Shape& shape) override {shape.checkForCollisionBall(*this); }
 

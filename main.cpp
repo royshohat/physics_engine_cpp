@@ -13,7 +13,7 @@
 const int WINDOW_WIDTH = 1000;
 const int WINDOW_HEIGHT = 800;
 
-#define BALLS_AMOUNT 64
+#define BALLS_AMOUNT 25
 
 using Clock = std::chrono::steady_clock;
 
@@ -37,19 +37,19 @@ int main(){
 
 
     std::vector<std::unique_ptr<Shape>> objs;
-    for(int i=0; i!=(int)std::sqrt(BALLS_AMOUNT); ++i){
-        for(int j=0; j!=(int)std::sqrt(BALLS_AMOUNT); ++j){
-           objs.push_back(std::make_unique<Ball>(
-            Vector2{static_cast<float>(i*30+100+j*2), static_cast<float>(j*30+100)}, 
-            Vector2{0, 0}, 
-            20)); 
+
+    Rope rope(Vector2{100, 500}, 50, 15.0f, true);
+    
+    for (auto i=0; i!=std::sqrt(BALLS_AMOUNT); ++i){
+        for (auto j=0; j!=std::sqrt(BALLS_AMOUNT); ++j){
+
+            objs.push_back(std::make_unique<Ball>(Vector2{static_cast<double>(200+i*40), static_cast<double>(100+j*40)}, Vector2{50, 0}, 20));
         }
     }
-    //objs.push_back(std::make_unique<Ball>(Vector2{300, 300}, Vector2{100, 400}, 60));
-    objs.push_back(std::make_unique<Line>(Vector2{WINDOW_WIDTH/2, WINDOW_HEIGHT}, Vector2{WINDOW_WIDTH, 400}));
-    objs.push_back(std::make_unique<Line>(Vector2{WINDOW_WIDTH/2, WINDOW_HEIGHT}, Vector2{0, 400}));
 
-    Rope rope(Vector2{500, 50}, 20, 20.0f);
+    //objs.push_back(std::make_unique<Line>(Vector2{0, WINDOW_HEIGHT/2}, Vector2{WINDOW_WIDTH/2, WINDOW_HEIGHT}));
+    //objs.push_back(std::make_unique<Line>(Vector2{WINDOW_WIDTH, WINDOW_HEIGHT/2}, Vector2{WINDOW_WIDTH/2, WINDOW_HEIGHT}));
+
 
     
 
@@ -79,15 +79,27 @@ int main(){
 
 
 
-        checkForEveryCollision(objs);
-
-
         auto elapsed = Clock::now() - start_time;
         auto elapsed_seconds = std::chrono::duration_cast<std::chrono::duration<double>>(elapsed);
 
-        rope.update(elapsed_seconds.count());
-        moveObjsToVelocity(objs, elapsed_seconds.count());
         
+        // this makes even faster/smaller balls not to tunnel through walls/other balls
+
+        const int SUB_STEPS = 4;
+        double step_dt = elapsed_seconds.count() / SUB_STEPS;
+        
+        
+        for (int s = 0; s != SUB_STEPS; ++s){
+            moveObjsToVelocity(objs, static_cast<float>(step_dt));
+            checkForEveryCollision(objs);
+
+            rope.update(step_dt);
+            for (auto& obj : objs) {
+                Ball* ball = dynamic_cast<Ball*>(obj.get());
+                if (!ball) continue; 
+                rope.checkCollisionWithBall(*ball);
+            }
+        }
     }
 
     

@@ -72,7 +72,7 @@ void Ball::checkForCollisionLine(Line& line){
 
     double d = std::sqrt(normal.magnitudeSq());
     
-    if (d > radius_) return;
+    if (d > radius_ || d == 0) return;
 
     normal = normalize(normal);
 

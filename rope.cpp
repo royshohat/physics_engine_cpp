@@ -1,15 +1,19 @@
 #include <vector>
 #include <cmath>
 #include <SDL2/SDL.h>
+#include <memory>
 
 #include "vector2.h"
+#include "shape.h"
+#include "ball.h"
+#include "line.h"
 #include "rope.h"
 
-Rope::Rope(Vector2 startPos, int numSegments, float segmentLength) {
-    // 1. Create Points
+Rope::Rope(Vector2 startPos, int numSegments, float segmentLength, bool lockLast) {
     for (int i = 0; i < numSegments; i++) {
-        Vector2 p = {startPos.x, startPos.y + i * segmentLength};
-        points.push_back({p, p, i == 0}); // Lock the first point
+        Vector2 p = {startPos.x + i * segmentLength, startPos.y};
+        bool locked = (i == 0) || (lockLast && i == numSegments - 1);
+        points.push_back({p, p, locked});
     }
 
     // 2. Create Sticks
@@ -26,12 +30,14 @@ void Rope::update(float dt) {
         Vector2 velocity = {p.pos.x - p.oldPos.x, p.pos.y - p.oldPos.y};
         p.oldPos = p.pos;
         
+        velocity.x *= 0.99f;
+        velocity.y *= 0.99f;
+        
         p.pos.x += velocity.x;
         p.pos.y += velocity.y + 1070 * dt * dt; 
     }
 
-    // 5 times for better lokking stiffnes
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 3; i++) {
         for (auto& s : sticks) {
             float dx = s.pB->pos.x - s.pA->pos.x;
             float dy = s.pB->pos.y - s.pA->pos.y;
@@ -59,5 +65,13 @@ void Rope::update(float dt) {
 void Rope::draw(SDL_Renderer* renderer) const{
     for (const auto& s : sticks) {
         SDL_RenderDrawLine(renderer, s.pA->pos.x, s.pA->pos.y, s.pB->pos.x, s.pB->pos.y);
+    }
+}
+
+void Rope::checkCollisionWithBall(Ball& ball) {
+    for (auto& s : sticks) {
+        Line tempLine(Vector2{s.pA->pos.x, s.pA->pos.y}, 
+                     Vector2{s.pB->pos.x, s.pB->pos.y});
+        ball.checkForCollisionLine(tempLine);
     }
 }
